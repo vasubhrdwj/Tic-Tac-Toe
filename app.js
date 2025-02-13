@@ -52,7 +52,6 @@ function gameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
-  console.log("Game Started");
   const board = gameBoard();
 
   const players = [
@@ -61,12 +60,17 @@ function gameController(
   ];
 
   let currentPlayer = players[0];
+  console.log(`${currentPlayer.name}'s turn!`);
+
+  const printNewBoard = () => {
+    console.log(`${currentPlayer.name}'s turn!`);
+    board.printBoard();
+  };
 
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
-    if (check === -1) return;
-    board.printBoard();
-    switchPlayer();
+    if (check !== -1) switchPlayer();
+    printNewBoard();
   };
 
   const switchPlayer = () =>
