@@ -1,7 +1,9 @@
 function gameBoard() {
   const rows = 3;
   const cols = 3;
-  board = [];
+  const board = [];
+
+  const getBoard = () => board;
 
   for (let i = 0; i < rows; i++) {
     board[i] = [];
@@ -10,13 +12,15 @@ function gameBoard() {
     }
   }
 
-  printBoard = () => {
+  const printBoard = () => {
     const boardValues = board.map((row) => row.map((cell) => cell.getValue()));
     console.log(boardValues);
   };
 
-  return { printBoard };
+  return { getBoard, printBoard };
 }
+
+console.log(gameBoard().getBoard());
 
 function Cell() {
   let value = 0;
@@ -29,15 +33,15 @@ function gameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
-  let players = [
+  const players = [
     { name: playerOneName, token: 1 },
     { name: playerTwoName, token: 2 },
   ];
 
-  let getPlayers = () => players;
+  const getPlayers = () => players;
 
-  return {  getPlayers };
+  return { getPlayers };
 }
 
 let game = gameController();
-
+console.log(game.getPlayers());
