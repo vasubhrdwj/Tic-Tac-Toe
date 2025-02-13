@@ -15,9 +15,8 @@ function gameBoard() {
     console.log(boardValues);
   };
 
-  return {printBoard};
+  return { printBoard };
 }
-
 
 function Cell() {
   let value = 0;
@@ -25,4 +24,20 @@ function Cell() {
 
   return { getValue };
 }
+
+function gameController(
+  playerOneName = "Player One",
+  playerTwoName = "Player Two"
+) {
+  let players = [
+    { name: playerOneName, token: 1 },
+    { name: playerTwoName, token: 2 },
+  ];
+
+  let getPlayers = () => players;
+
+  return {  getPlayers };
+}
+
+let game = gameController();
 
