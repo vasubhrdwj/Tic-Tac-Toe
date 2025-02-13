@@ -43,7 +43,37 @@ function gameBoard() {
         return true;
       }
     }
+    for (let col = 0; col < cols; col++) {
+      if (
+        board[0][col].getValue() !== 0 &&
+        board[1][col].getValue() !== 0 &&
+        board[2][col].getValue() !== 0 &&
+        board[0][col].getValue() === board[1][col].getValue() &&
+        board[1][col].getValue() === board[2][col].getValue()
+      ) {
+        return true;
+      }
+    }
 
+    if (
+      board[0][0].getValue() === board[1][1].getValue() &&
+      board[1][1].getValue() === board[2][2].getValue() &&
+      board[0][0].getValue() !== 0 &&
+      board[1][1].getValue() !== 0 &&
+      board[2][2].getValue() !== 0
+    ) {
+      return true;
+    }
+
+    if (
+      board[0][2].getValue() === board[1][1].getValue() &&
+      board[1][1].getValue() === board[2][0].getValue() &&
+      board[2][0].getValue() !== 0 &&
+      board[1][1].getValue() !== 0 &&
+      board[0][2].getValue() !== 0
+    ) {
+      return true;
+    }
     return false;
   };
 
@@ -76,7 +106,7 @@ function gameController(
 
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
-    console.log(isWin());
+    // console.log(isWin());
     if (isWin() === true) {
       console.log(`${currentPlayer.name} won the Game!!!`);
       board.printBoard();
@@ -97,4 +127,3 @@ function gameController(
 }
 
 let game = gameController();
- 
