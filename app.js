@@ -39,7 +39,8 @@ function gameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
-  // const board = gameBoard();
+  console.log("Game Started");
+  const board = gameBoard();
 
   const players = [
     { name: playerOneName, token: 1 },
@@ -48,13 +49,18 @@ function gameController(
 
   let currentPlayer = players[0];
 
+  const playRound = (row, col) => {
+    board.markBoard(row, col, currentPlayer);
+    board.printBoard();
+  };
+
   const getPlayers = () => players;
 
-  return { currentPlayer, getPlayers };
+  return { getPlayers, playRound };
 }
 
 let game = gameController();
-let x = gameBoard();
 
-
-x.printBoard();
+game.playRound(1, 1);
+game.playRound(1, 2);
+game.playRound(2, 2);
