@@ -72,7 +72,7 @@ function gameController(
     { name: playerTwoName, token: 2 },
   ];
 
-  let currentPlayer = players[0];
+  let currentPlayer;
 
   const reset = () => {
     board.resetBoard();
@@ -115,7 +115,16 @@ function gameController(
   return { playRound };
 }
 
-let game = gameController();
+function screenController() {
+  let game = gameController();
+  const turnDiv = document.querySelector(".turn");
+  const boardDiv = document.querySelector(".board");
+
+  turnDiv.textContent = "";
+  boardDiv.textContent = game.printNewBoard();
+}
+
+screenController();
 
 // Winning condition
 // game.playRound(1, 1);
