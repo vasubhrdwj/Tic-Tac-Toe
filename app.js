@@ -12,16 +12,17 @@ function gameBoard() {
   const cols = 3;
   const board = [];
 
-  console.log("Board intitiated");
-
   const getBoard = () => board;
 
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < cols; j++) {
-      board[i].push(Cell());
+  const resetBoard = () => {
+    console.log("Initiating Board");
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < cols; j++) {
+        board[i].push(Cell());
+      }
     }
-  }
+  };
 
   const markBoard = (row, col, player) => {
     if (board[row][col].getValue() !== 0) {
@@ -57,7 +58,7 @@ function gameBoard() {
     console.log(boardValues);
   };
 
-  return { getBoard, markBoard, printBoard, isWinning };
+  return { getBoard, markBoard, printBoard, isWinning, resetBoard };
 }
 
 function gameController(
@@ -72,6 +73,14 @@ function gameController(
   ];
 
   let currentPlayer = players[0];
+
+  const reset = () => {
+    board.resetBoard();
+    currentPlayer = players[0];
+  };
+
+  reset();
+
   console.log(`${currentPlayer.name}'s turn!`);
 
   const printNewBoard = () => {
@@ -81,10 +90,9 @@ function gameController(
 
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
-    // console.log(isWin());
+
     if (isWin() === true) {
-      console.log(`${currentPlayer.name} won the Game!!!`);
-      board.printBoard();
+      winningCondition();
       return;
     }
     if (check !== -1) switchPlayer();
@@ -93,6 +101,12 @@ function gameController(
 
   const isWin = () => {
     return board.isWinning();
+  };
+
+  const winningCondition = () => {
+    console.log(`${currentPlayer.name} won the Game!!!`);
+    board.printBoard();
+    reset();
   };
 
   const switchPlayer = () =>
