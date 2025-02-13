@@ -52,11 +52,13 @@ function gameController(
   const playRound = (row, col) => {
     board.markBoard(row, col, currentPlayer);
     board.printBoard();
+    switchPlayer();
   };
 
-  const getPlayers = () => players;
+  const switchPlayer = () => currentPlayer = (currentPlayer === players[0] ? players[1] : players[0]);
 
-  return { getPlayers, playRound };
+
+  return {  playRound };
 }
 
 let game = gameController();
