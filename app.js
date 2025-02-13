@@ -3,6 +3,8 @@ function gameBoard() {
   const cols = 3;
   const board = [];
 
+  console.log("Board intitiated");
+
   const getBoard = () => board;
 
   for (let i = 0; i < rows; i++) {
@@ -12,36 +14,47 @@ function gameBoard() {
     }
   }
 
+  const markBoard = (row, col, player) => {
+    board[row][col].mark(player.token);
+  };
+
   const printBoard = () => {
     const boardValues = board.map((row) => row.map((cell) => cell.getValue()));
     console.log(boardValues);
   };
 
-  return { getBoard, printBoard };
+  return { getBoard, markBoard, printBoard };
 }
-
-console.log(gameBoard().getBoard());
 
 function Cell() {
   let value = 0;
   getValue = () => value;
 
-  return { getValue };
+  mark = (val) => (value = val);
+
+  return { mark, getValue };
 }
 
 function gameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
+  // const board = gameBoard();
+
   const players = [
     { name: playerOneName, token: 1 },
     { name: playerTwoName, token: 2 },
   ];
 
+  let currentPlayer = players[0];
+
   const getPlayers = () => players;
 
-  return { getPlayers };
+  return { currentPlayer, getPlayers };
 }
 
 let game = gameController();
-console.log(game.getPlayers());
+let x = gameBoard();
+
+
+x.printBoard();
