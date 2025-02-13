@@ -25,7 +25,6 @@ function gameBoard() {
 
   const markBoard = (row, col, player) => {
     if (board[row][col].getValue() !== 0) {
-      console.log("Already marked!!");
       return -1;
     }
     board[row][col].mark(player.token);
@@ -52,12 +51,22 @@ function gameBoard() {
     );
   };
 
+  const isDraw = () => {
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell.getValue() === 0) return false;
+      }
+    }
+
+    return true;
+  };
+
   const printBoard = () => {
     const boardValues = board.map((row) => row.map((cell) => cell.getValue()));
     console.log(boardValues);
   };
 
-  return { getBoard, markBoard, printBoard, isWinning, resetBoard };
+  return { getBoard, markBoard, printBoard, isWinning, resetBoard, isDraw };
 }
 
 function gameController(
@@ -87,9 +96,7 @@ function gameController(
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
 
-    if (isWin() === true) {
-      return;
-    }
+    if (isWin()) return;
     if (check !== -1) switchPlayer();
   };
 
@@ -102,7 +109,14 @@ function gameController(
   const switchPlayer = () =>
     (currentPlayer = currentPlayer === players[0] ? players[1] : players[0]);
 
-  return { getCurrentPlayer, playRound, getBoard: board.getBoard, isWin };
+  return {
+    getCurrentPlayer,
+    playRound,
+    getBoard: board.getBoard,
+    isWin,
+    reset,
+    isDraw: board.isDraw,
+  };
 }
 
 function screenController() {
@@ -110,12 +124,14 @@ function screenController() {
   const turnDiv = document.querySelector(".turn");
   const boardDiv = document.querySelector(".board");
   const resultDiv = document.querySelector(".result");
+  const newGame = document.querySelector(".newGame");
 
   const updateScreen = () => {
     boardDiv.textContent = "";
 
     const board = game.getBoard();
     const currentPlayer = game.getCurrentPlayer();
+
     if (game.isWin() === true) turnDiv.textContent = "";
     else turnDiv.textContent = `${currentPlayer.name}'s turn`;
 
@@ -131,13 +147,16 @@ function screenController() {
       }
       boardDiv.appendChild(rowDiv);
     }
+    if (game.isDraw() === true && !game.isWin()) {
+      resultDiv.textContent = "It's a Draw";
+    }
   };
 
   const sign = (value) => {
-    if(value === 0) return "";
-    else if(value === 1) return "X";
+    if (value === 0) return "";
+    else if (value === 1) return "X";
     else return "O";
-  }
+  };
 
   function clickHandlerBoard(e) {
     const selectedRow = e.target.dataset.row;
@@ -152,6 +171,12 @@ function screenController() {
     updateScreen();
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
+
+  newGame.addEventListener("click", (e) => {
+    game.reset();
+    resultDiv.textContent = "";
+    updateScreen();
+  });
 
   updateScreen();
 }
