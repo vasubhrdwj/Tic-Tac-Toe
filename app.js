@@ -1,3 +1,12 @@
+function Cell() {
+  let value = 0;
+  getValue = () => value;
+
+  mark = (val) => (value = val);
+
+  return { mark, getValue };
+}
+
 function gameBoard() {
   const rows = 3;
   const cols = 3;
@@ -15,10 +24,6 @@ function gameBoard() {
   }
 
   const markBoard = (row, col, player) => {
-    if (!isValid(row, col)) {
-      console.log("Select something valid dawg");
-      return -1;
-    }
     if (board[row][col].getValue() !== 0) {
       console.log("Already marked!!");
       return -1;
@@ -26,9 +31,20 @@ function gameBoard() {
     board[row][col].mark(player.token);
   };
 
-  const isValid = (row, col) => {
-    if (row < 0 || row >= rows || col < 0 || col >= cols) return false;
-    else return true;
+  const isWinning = () => {
+    for (let row = 0; row < rows; row++) {
+      if (
+        board[row][0].getValue() !== 0 &&
+        board[row][1].getValue() !== 0 &&
+        board[row][2].getValue() !== 0 &&
+        board[row][0].getValue() === board[row][1].getValue() &&
+        board[row][1].getValue() === board[row][2].getValue()
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   const printBoard = () => {
@@ -36,16 +52,7 @@ function gameBoard() {
     console.log(boardValues);
   };
 
-  return { getBoard, markBoard, printBoard };
-}
-
-function Cell() {
-  let value = 0;
-  getValue = () => value;
-
-  mark = (val) => (value = val);
-
-  return { mark, getValue };
+  return { getBoard, markBoard, printBoard, isWinning };
 }
 
 function gameController(
@@ -63,14 +70,24 @@ function gameController(
   console.log(`${currentPlayer.name}'s turn!`);
 
   const printNewBoard = () => {
-    console.log(`${currentPlayer.name}'s turn!`);
     board.printBoard();
+    console.log(`${currentPlayer.name}'s turn!`);
   };
 
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
+    console.log(isWin());
+    if (isWin() === true) {
+      console.log(`${currentPlayer.name} won the Game!!!`);
+      board.printBoard();
+      return;
+    }
     if (check !== -1) switchPlayer();
     printNewBoard();
+  };
+
+  const isWin = () => {
+    return board.isWinning();
   };
 
   const switchPlayer = () =>
@@ -80,3 +97,4 @@ function gameController(
 }
 
 let game = gameController();
+ 
