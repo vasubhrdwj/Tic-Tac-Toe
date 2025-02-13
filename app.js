@@ -126,13 +126,18 @@ function screenController() {
         cellButton.classList.add("cell");
         cellButton.dataset.row = row;
         cellButton.dataset.column = col;
-        cellButton.textContent = board[row][col].getValue();
+        cellButton.textContent = sign(board[row][col].getValue());
         rowDiv.appendChild(cellButton);
       }
       boardDiv.appendChild(rowDiv);
     }
-
   };
+
+  const sign = (value) => {
+    if(value === 0) return "";
+    else if(value === 1) return "X";
+    else return "O";
+  }
 
   function clickHandlerBoard(e) {
     const selectedRow = e.target.dataset.row;
