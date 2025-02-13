@@ -32,49 +32,24 @@ function gameBoard() {
   };
 
   const isWinning = () => {
-    for (let row = 0; row < rows; row++) {
+    const checkLine = (a, b, c) =>
+      a.getValue() != 0 &&
+      a.getValue() === b.getValue() &&
+      b.getValue() === c.getValue();
+
+    for (let i = 0; i < rows; i++) {
       if (
-        board[row][0].getValue() !== 0 &&
-        board[row][1].getValue() !== 0 &&
-        board[row][2].getValue() !== 0 &&
-        board[row][0].getValue() === board[row][1].getValue() &&
-        board[row][1].getValue() === board[row][2].getValue()
-      ) {
-        return true;
-      }
-    }
-    for (let col = 0; col < cols; col++) {
-      if (
-        board[0][col].getValue() !== 0 &&
-        board[1][col].getValue() !== 0 &&
-        board[2][col].getValue() !== 0 &&
-        board[0][col].getValue() === board[1][col].getValue() &&
-        board[1][col].getValue() === board[2][col].getValue()
+        checkLine(board[i][0], board[i][1], board[i][2]) ||
+        checkLine(board[0][i], board[1][i], board[2][i])
       ) {
         return true;
       }
     }
 
-    if (
-      board[0][0].getValue() === board[1][1].getValue() &&
-      board[1][1].getValue() === board[2][2].getValue() &&
-      board[0][0].getValue() !== 0 &&
-      board[1][1].getValue() !== 0 &&
-      board[2][2].getValue() !== 0
-    ) {
-      return true;
-    }
-
-    if (
-      board[0][2].getValue() === board[1][1].getValue() &&
-      board[1][1].getValue() === board[2][0].getValue() &&
-      board[2][0].getValue() !== 0 &&
-      board[1][1].getValue() !== 0 &&
-      board[0][2].getValue() !== 0
-    ) {
-      return true;
-    }
-    return false;
+    return (
+      checkLine(board[0][0], board[1][1], board[2][2]) ||
+      checkLine(board[0][2], board[1][1], board[2][0])
+    );
   };
 
   const printBoard = () => {
@@ -127,3 +102,10 @@ function gameController(
 }
 
 let game = gameController();
+
+// Winning condition
+// game.playRound(1, 1);
+// game.playRound(1, 2);
+// game.playRound(0, 0);
+// game.playRound(1, 0);
+// game.playRound(2, 2);
