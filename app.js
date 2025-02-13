@@ -15,7 +15,6 @@ function gameBoard() {
   const getBoard = () => board;
 
   const resetBoard = () => {
-    console.log("Initiating Board");
     for (let i = 0; i < rows; i++) {
       board[i] = [];
       for (let j = 0; j < cols; j++) {
@@ -81,32 +80,21 @@ function gameController(
 
   reset();
 
-  console.log(`${currentPlayer.name}'s turn!`);
-
   const printNewBoard = () => {
     board.printBoard();
-    console.log(`${currentPlayer.name}'s turn!`);
   };
 
   const playRound = (row, col) => {
     const check = board.markBoard(row, col, currentPlayer);
 
     if (isWin() === true) {
-      winningCondition();
       return;
     }
     if (check !== -1) switchPlayer();
-    printNewBoard();
   };
 
   const isWin = () => {
     return board.isWinning();
-  };
-
-  const winningCondition = () => {
-    console.log(`${currentPlayer.name} won the Game!!!`);
-    board.printBoard();
-    reset();
   };
 
   const getCurrentPlayer = () => currentPlayer;
@@ -114,21 +102,22 @@ function gameController(
   const switchPlayer = () =>
     (currentPlayer = currentPlayer === players[0] ? players[1] : players[0]);
 
-  return { getCurrentPlayer, playRound, getBoard: board.getBoard };
+  return { getCurrentPlayer, playRound, getBoard: board.getBoard, isWin };
 }
 
 function screenController() {
   let game = gameController();
   const turnDiv = document.querySelector(".turn");
   const boardDiv = document.querySelector(".board");
+  const resultDiv = document.querySelector(".result");
 
   const updateScreen = () => {
     boardDiv.textContent = "";
 
     const board = game.getBoard();
     const currentPlayer = game.getCurrentPlayer();
-
-    turnDiv.textContent = `${currentPlayer.name}'s turn`;
+    if (game.isWin() === true) turnDiv.textContent = "";
+    else turnDiv.textContent = `${currentPlayer.name}'s turn`;
 
     for (let row = 0; row < 3; row++) {
       const rowDiv = document.createElement("div");
@@ -142,14 +131,19 @@ function screenController() {
       }
       boardDiv.appendChild(rowDiv);
     }
+
   };
 
   function clickHandlerBoard(e) {
     const selectedRow = e.target.dataset.row;
     const selectedCol = e.target.dataset.column;
-    if (!selectedRow) return;
+    if (!selectedRow || game.isWin() === true) return;
 
     game.playRound(selectedRow, selectedCol);
+    if (game.isWin() === true) {
+      const currentPlayer = game.getCurrentPlayer();
+      resultDiv.textContent = `${currentPlayer.name} won the game!!!`;
+    }
     updateScreen();
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
@@ -158,10 +152,3 @@ function screenController() {
 }
 
 screenController();
-
-// Winning condition
-// game.playRound(1, 1);
-// game.playRound(1, 2);
-// game.playRound(0, 0);
-// game.playRound(1, 0);
-// game.playRound(2, 2);
