@@ -69,16 +69,15 @@ function gameBoard() {
   return { getBoard, markBoard, printBoard, isWinning, resetBoard, isDraw };
 }
 
-function gameController(
-  playerOneName = "Player One",
-  playerTwoName = "Player Two"
-) {
+function gameController(playerOneName = "X", playerTwoName = "O") {
   const board = gameBoard();
 
   const players = [
-    { name: playerOneName, token: 1 },
-    { name: playerTwoName, token: 2 },
+    { name: playerOneName, token: 1, score: 0 },
+    { name: playerTwoName, token: 2, score: 0 },
   ];
+
+  const getPlayer = () => players;
 
   let currentPlayer;
 
@@ -116,6 +115,7 @@ function gameController(
     isWin,
     reset,
     isDraw: board.isDraw,
+    getPlayer,
   };
 }
 
@@ -125,6 +125,11 @@ function screenController() {
   const boardDiv = document.querySelector(".board");
   const resultDiv = document.querySelector(".result");
   const newGame = document.querySelector(".newGame");
+  const resetScore = document.querySelector(".reset-score");
+  const p1Score = document.querySelector(".p1-score");
+  const p2Score = document.querySelector(".p2-score");
+
+  let players = game.getPlayer();
 
   const updateScreen = () => {
     boardDiv.textContent = "";
@@ -133,7 +138,9 @@ function screenController() {
     const currentPlayer = game.getCurrentPlayer();
 
     if (game.isWin() === true) turnDiv.textContent = "";
-    else turnDiv.textContent = `${currentPlayer.name}'s turn`;
+    else turnDiv.textContent = `${currentPlayer.name} turn`;
+
+    updateScore();
 
     for (let row = 0; row < 3; row++) {
       const rowDiv = document.createElement("div");
@@ -158,6 +165,17 @@ function screenController() {
     else return "O";
   };
 
+  const updateScore = () => {
+    p1Score.textContent = players[0].score;
+    p2Score.textContent = players[1].score;
+  };
+
+  const resetGame = () => {
+    game.reset();
+    resultDiv.textContent = "";
+    updateScreen();
+  };
+
   function clickHandlerBoard(e) {
     const selectedRow = e.target.dataset.row;
     const selectedCol = e.target.dataset.column;
@@ -167,15 +185,20 @@ function screenController() {
     if (game.isWin() === true) {
       const currentPlayer = game.getCurrentPlayer();
       resultDiv.textContent = `${currentPlayer.name} won the game!!!`;
+      currentPlayer.score++;
     }
     updateScreen();
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
 
   newGame.addEventListener("click", (e) => {
-    game.reset();
-    resultDiv.textContent = "";
-    updateScreen();
+    resetGame();
+  });
+
+  resetScore.addEventListener("click", (e) => {
+    players[0].score = 0;
+    players[1].score = 0;
+    resetGame();
   });
 
   updateScreen();

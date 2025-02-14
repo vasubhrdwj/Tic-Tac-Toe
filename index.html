@@ -7,11 +7,25 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="turn"></div>
-    <div class="board"></div>
-    <div class="result"></div>
-    <button class="newGame">New Game</button>
-
+    <div class="main">
+      <div class="turn"></div>
+      <div class="score">
+        <div class="score-block">
+          X :
+          <p class="p1-score"></p>
+        </div>
+        <div class="score-block">
+          O :
+          <p class="p2-score"></p>
+        </div>
+      </div>
+      <div class="board"></div>
+      <div class="result"></div>
+      <div class="btn">
+        <button class="newGame">Restart</button>
+        <button class="reset-score">Reset Score</button>
+      </div>
+    </div>
 
     <script src="/app.js"></script>
   </body>
